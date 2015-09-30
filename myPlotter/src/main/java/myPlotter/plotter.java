@@ -13,8 +13,9 @@ public class plotter {
  
   public static void main(String[] args) throws Exception {
       
-    String filename = "PDSF_statistics.csv";
-    BufferedReader br = new BufferedReader(new FileReader(filename));
+    String prefix = "F:/git/Grid_simulation/grid/src/main/java/flow_model/output/";  
+    String filename = "KISTI_statistics.csv";
+    BufferedReader br = new BufferedReader(new FileReader(prefix + filename));
     LinkedList<String> metricsNames = new LinkedList<String>();
     LinkedList<Double> time = new LinkedList<Double>();
     LinkedList<Double> freeCPUs = new LinkedList<Double>();
