@@ -10,12 +10,12 @@ import com.xeiam.xchart.StyleManager.ChartType;
 /**
  * Creates a simple Chart using QuickChart
  */
-public class plotter {
+public class ResourceUtilizationPlotter {
  
   public static void main(String[] args) throws Exception {
       
     String prefix = "F:/git/Grid_simulation/grid/src/main/java/flow_model/output/";  
-    String filename = "network_usage.csv";
+    String filename = "RCF_statistics.csv";
     BufferedReader br = new BufferedReader(new FileReader(prefix + filename));
     LinkedList<String> metricsNames = new LinkedList<String>();
     LinkedList<Double> time = new LinkedList<Double>();
@@ -72,15 +72,28 @@ public class plotter {
 	lineIterator++;
     }
     
+    //renormalize plots
+    for (int i = 3; i < data.size(); i++){
+	for (int j = 0; j < lines; j++){
+	    data.get(i)[j] += data.get(i - 1)[j];
+	}
+    }
+    
   
-    Chart chart = new ChartBuilder().chartType(ChartType.Line).width(1024).height(768).title(filename).xAxisTitle("Time (s)").yAxisTitle("ratio").build();
+    Chart chart = new ChartBuilder().chartType(ChartType.Line.Line).width(1024).height(768).title(filename).xAxisTitle("Time (s)").yAxisTitle("ratio").build();
 
     
-    for (int i = 1; i < data.size(); i ++ ){
+    for (int i = data.size()-1; i >0 ; i-- ){
 	if ( data.get(i)[0] == -1){
 	    continue;
 	}
-	chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
+	if (i == 1){
+	    System.out.println("cache");
+	    chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
+	}else{
+	    chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Area);
+
+	}
 	// Create Chart
 	//Chart chart = QuickChart.getChart(filename, "Time (s)", metricsNames.get(i), 
         //metricsNames.get(i),

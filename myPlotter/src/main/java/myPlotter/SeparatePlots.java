@@ -5,17 +5,16 @@ import java.io.FileReader;
 import java.util.LinkedList;
 
 import com.xeiam.xchart.*;
-import com.xeiam.xchart.StyleManager.ChartType;
 
 /**
  * Creates a simple Chart using QuickChart
  */
-public class plotter {
+public class SeparatePlots {
  
   public static void main(String[] args) throws Exception {
       
     String prefix = "F:/git/Grid_simulation/grid/src/main/java/flow_model/output/";  
-    String filename = "network_usage.csv";
+    String filename = "PDSF_statistics.csv";
     BufferedReader br = new BufferedReader(new FileReader(prefix + filename));
     LinkedList<String> metricsNames = new LinkedList<String>();
     LinkedList<Double> time = new LinkedList<Double>();
@@ -73,22 +72,18 @@ public class plotter {
     }
     
   
-    Chart chart = new ChartBuilder().chartType(ChartType.Line).width(1024).height(768).title(filename).xAxisTitle("Time (s)").yAxisTitle("ratio").build();
-
-    
     for (int i = 1; i < data.size(); i ++ ){
 	if ( data.get(i)[0] == -1){
 	    continue;
-	}
-	chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
+	}	
 	// Create Chart
-	//Chart chart = QuickChart.getChart(filename, "Time (s)", metricsNames.get(i), 
-        //metricsNames.get(i),
-        //data.get(0), data.get(i));
+	Chart chart = QuickChart.getChart(filename, "Time (s)", metricsNames.get(i), 
+        metricsNames.get(i),
+        data.get(0), data.get(i));
 	// Show it
-	
+	new SwingWrapper(chart).displayChart();	
     }
-    new SwingWrapper(chart).displayChart();	
+    
 
  
   }
