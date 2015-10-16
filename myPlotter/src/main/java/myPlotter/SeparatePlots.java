@@ -1,10 +1,14 @@
 package myPlotter;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.LinkedList;
 
 import com.xeiam.xchart.*;
+import com.xeiam.xchart.StyleManager.ChartType;
+import com.xeiam.xchart.StyleManager.LegendPosition;
 
 /**
  * Creates a simple Chart using QuickChart
@@ -81,6 +85,14 @@ public class SeparatePlots {
         metricsNames.get(i),
         data.get(0), data.get(i));
 	// Show it
+	chart.getStyleManager().setChartType(ChartType.Line);    
+	chart.getStyleManager().setLegendPosition(LegendPosition.InsideNE);
+	chart.getStyleManager().setChartBackgroundColor(Color.WHITE);
+	chart.getStyleManager().setChartTitleFont(new Font(Font.DIALOG, Font.PLAIN, 18));
+	chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 28));
+	chart.getStyleManager().setAxisTitleFont(new Font(Font.DIALOG, Font.PLAIN, 30));
+	chart.getStyleManager().setAxisTickLabelsFont(new Font(Font.DIALOG, Font.PLAIN, 18));
+	//chart.getStyleManager().setDecimalPattern("#.#E0");
 	new SwingWrapper(chart).displayChart();	
     }
     

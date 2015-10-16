@@ -13,7 +13,7 @@ import com.xeiam.xchart.StyleManager.LegendPosition;
 /**
  * Creates a simple Chart using QuickChart
  */
-public class plotter {
+public class comparisonPlotter {
  
   public static void plot(String filename, String title, String xName, String yName) throws Exception {
       
@@ -25,7 +25,7 @@ public class plotter {
     
     String line;
     String[] lineData;
-    String cvsSplitBy = " ";
+    String cvsSplitBy = ",";
     boolean firstLine = true;
     String plotName = "fail";
     
@@ -67,7 +67,7 @@ public class plotter {
 	    }  
 	    catch(NumberFormatException nfe)  
 	    {  
-		data.get(i)[lineIterator] = -1;  
+		data.get(i)[lineIterator] = data.get(i)[lineIterator - 1];  //if there is no more data - repeat the last point
 	    }
 	    
 	}
@@ -75,14 +75,14 @@ public class plotter {
     }
     
   
-    Chart chart = new ChartBuilder().width(1200).height(400).build();
+    Chart chart = new ChartBuilder().width(900).height(300).build();
 
-    
-    for (int i = 1; i < data.size(); i ++ ){
+    System.out.println("plotting...");
+    for (int i = 1; i < data.size(); i+=2 ){
 	if ( data.get(i)[0] == -1){
 	    continue;
 	}
-	chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
+	chart.addSeries(metricsNames.get(i), data.get(i-1), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
 	// Create Chart
 	//Chart chart = QuickChart.getChart(filename, "Time (s)", metricsNames.get(i), 
         //metricsNames.get(i),
@@ -90,15 +90,15 @@ public class plotter {
 	// Show it
 	
     }
-    chart.getStyleManager().setChartBackgroundColor(Color.WHITE);
+    
     chart.setChartTitle(title);
     chart.setXAxisTitle(xName);
     chart.setYAxisTitle(yName);
     chart.getStyleManager().setChartType(ChartType.Line);    
-    chart.getStyleManager().setLegendPosition(LegendPosition.OutsideE);
+    chart.getStyleManager().setLegendPosition(LegendPosition.InsideNE);
     chart.getStyleManager().setChartBackgroundColor(Color.WHITE);
     chart.getStyleManager().setChartTitleFont(new Font(Font.DIALOG, Font.PLAIN, 24));
-    chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 18));
+    chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 22));
     chart.getStyleManager().setAxisTitleFont(new Font(Font.DIALOG, Font.PLAIN, 30));
     chart.getStyleManager().setAxisTickLabelsFont(new Font(Font.DIALOG, Font.PLAIN, 18));
     //chart.getStyleManager().setDecimalPattern("#.#E0");

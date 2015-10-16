@@ -1,22 +1,25 @@
 package myPlotter;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.LinkedList;
 
 import com.xeiam.xchart.*;
 import com.xeiam.xchart.StyleManager.ChartType;
+import com.xeiam.xchart.StyleManager.LegendPosition;
 
 /**
  * Creates a simple Chart using QuickChart
  */
 public class ResourceUtilizationPlotter {
  
-  public static void main(String[] args) throws Exception {
-      
-    String prefix = "F:/git/Grid_simulation/grid/src/main/java/flow_model/output/";  
-    String filename = "RCF_statistics.csv";
-    BufferedReader br = new BufferedReader(new FileReader(prefix + filename));
+  public static void plot(String filename, String title) throws Exception {
+     System.out.println(filename); 
+    //String prefix = "F:/git/Grid_simulation/grid/src/main/java/flow_model/output/";  
+    //String filename = "RCF_statistics.csv";
+    BufferedReader br = new BufferedReader(new FileReader(filename));
     LinkedList<String> metricsNames = new LinkedList<String>();
     LinkedList<Double> time = new LinkedList<Double>();
     LinkedList<Double> freeCPUs = new LinkedList<Double>();
@@ -38,7 +41,7 @@ public class ResourceUtilizationPlotter {
     
     //calculate lines
     int lines = 0;
-    br.mark(10000000);
+    br.mark(100000000);
 
     
     while ((line = br.readLine()) != null ) {	
@@ -73,22 +76,22 @@ public class ResourceUtilizationPlotter {
     }
     
     //renormalize plots
-    for (int i = 3; i < data.size(); i++){
+    for (int i = 6; i < data.size(); i++){
 	for (int j = 0; j < lines; j++){
 	    data.get(i)[j] += data.get(i - 1)[j];
 	}
     }
     
   
-    Chart chart = new ChartBuilder().chartType(ChartType.Line.Line).width(1024).height(768).title(filename).xAxisTitle("Time (s)").yAxisTitle("ratio").build();
+    Chart chart = new ChartBuilder().width(1200).height(400).build();
 
     
     for (int i = data.size()-1; i >0 ; i-- ){
 	if ( data.get(i)[0] == -1){
 	    continue;
 	}
-	if (i == 1){
-	    System.out.println("cache");
+	if (i <= 4){
+	    //System.out.println("cache");
 	    chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
 	}else{
 	    chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Area);
@@ -101,6 +104,17 @@ public class ResourceUtilizationPlotter {
 	// Show it
 	
     }
+    chart.setChartTitle(title);
+    chart.setXAxisTitle("Time (s)");
+    chart.setYAxisTitle("usage");
+    chart.getStyleManager().setChartType(ChartType.Line);    
+    chart.getStyleManager().setLegendPosition(LegendPosition.OutsideE);
+    chart.getStyleManager().setChartBackgroundColor(Color.WHITE);
+    chart.getStyleManager().setChartTitleFont(new Font(Font.DIALOG, Font.PLAIN, 24));
+    chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 18));
+    chart.getStyleManager().setAxisTitleFont(new Font(Font.DIALOG, Font.PLAIN, 30));
+    chart.getStyleManager().setAxisTickLabelsFont(new Font(Font.DIALOG, Font.PLAIN, 18));
+    //chart.getStyleManager().setDecimalPattern("#.#E0");
     new SwingWrapper(chart).displayChart();	
 
  
