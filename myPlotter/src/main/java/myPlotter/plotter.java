@@ -63,7 +63,11 @@ public class plotter {
 	for(int i = 0; i < lineData.length; i++){
 	    try  
 	    {  
-		data.get(i)[lineIterator] = Double.valueOf(lineData[i]);
+		if (metricsNames.get(i).equals("time")){
+		    data.get(i)[lineIterator] = Double.valueOf(lineData[i]) / (24 * 3600.0);
+		}else{
+		    data.get(i)[lineIterator] = Double.valueOf(lineData[i]);
+		}
 	    }  
 	    catch(NumberFormatException nfe)  
 	    {  

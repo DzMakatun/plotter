@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.xeiam.xchart.*;
 import com.xeiam.xchart.StyleManager.ChartType;
@@ -16,6 +18,32 @@ import com.xeiam.xchart.StyleManager.LegendPosition;
 public class ResourceUtilizationPlotter {
  
   public static void plot(String filename, String title) throws Exception {
+     Map<String, Color> colorMap = new HashMap<String, Color>();
+     colorMap.put("busyCPUs", Color.BLACK);
+     colorMap.put("submittedInputSize", Color.GRAY) ;
+     colorMap.put("reservedOutputSize", Color.lightGray);
+     colorMap.put("waitingInputSize", Color.BLUE);
+     colorMap.put("readyOutputSize", Color.ORANGE);     
+     colorMap.put("pendingOutputSize", Color.RED);
+     
+     colorMap.put("jobSubmissionFailureFlag", Color.PINK);
+     colorMap.put("incommingTransferFailureFlag", Color.MAGENTA);     
+     colorMap.put("outgoingTransferFailureFlag", Color.CYAN);
+
+     Map<String, String> nameMap = new HashMap<String, String>();
+     nameMap.put("busyCPUs", "CPU usage");
+     nameMap.put("submittedInputSize", "used input") ;
+     nameMap.put("reservedOutputSize", "reserved for output");
+     nameMap.put("waitingInputSize", "input queue");
+     nameMap.put("readyOutputSize", "processed output");
+     nameMap.put("pendingOutputSize", "pending");
+     
+     nameMap.put("jobSubmissionFailureFlag", "job submition failure");
+     nameMap.put("incommingTransferFailureFlag", "incoming transfer failure");
+     nameMap.put("outgoingTransferFailureFlag", "outgoing transfer failure ");
+      
+      
+      
      System.out.println(filename); 
     //String prefix = "F:/git/Grid_simulation/grid/src/main/java/flow_model/output/";  
     //String filename = "RCF_statistics.csv";
@@ -64,7 +92,11 @@ public class ResourceUtilizationPlotter {
 	for(int i = 0; i < lineData.length; i++){
 	    try  
 	    {  
-		data.get(i)[lineIterator] = Double.valueOf(lineData[i]);
+		if (metricsNames.get(i).equals("time")){
+		    data.get(i)[lineIterator] = Double.valueOf(lineData[i]) / (24 * 3600.0);
+		}else{
+		data.get(i)[lineIterator] = Double.valueOf(lineData[i]) * 100;
+		}
 	    }  
 	    catch(NumberFormatException nfe)  
 	    {  
@@ -83,20 +115,45 @@ public class ResourceUtilizationPlotter {
     }
     
   
-    Chart chart = new ChartBuilder().width(1200).height(400).build();
+    Chart chart = new ChartBuilder().width(1500).height(500).build();
 
     
     for (int i = data.size()-1; i >0 ; i-- ){
 	if ( data.get(i)[0] == -1){
 	    continue;
 	}
-	if (i <= 4){
-	    //System.out.println("cache");
-	    chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Line);
-	}else{
-	    chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE).setSeriesType(Series.SeriesType.Area);
+	//filter values
+	if (!colorMap.containsKey(metricsNames.get(i)) ){
+	    continue;
+	}
+	
+	//Series serie = chart.addSeries(metricsNames.get(i), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE);
+	Series serie = chart.addSeries(nameMap.get(metricsNames.get(i) ), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE);
+	
+	
+	if (metricsNames.get(i).equals("busyCPUs")){	    //System.out.println("cache");
+	    serie   
+	    .setSeriesType(Series.SeriesType.Line);
+	    serie.setLineColor(colorMap.get(  metricsNames.get(i)  )   );
+	}else
+	if (metricsNames.get(i).endsWith("Flag")){
+	    serie.setSeriesType(Series.SeriesType.Line);
+	    serie.setLineStyle(SeriesLineStyle.DOT_DOT);
+	    serie.setLineColor(colorMap.get(  metricsNames.get(i)  )   );
+	}else
+	{    serie
+	    .setMarker(SeriesMarker.NONE)
+	    .setSeriesType(Series.SeriesType.Area);
+	    if (colorMap.containsKey(metricsNames.get(i)) ){
+	        serie.setFillColor(colorMap.get(  metricsNames.get(i)  )   );
+	        serie.setLineColor(colorMap.get(  metricsNames.get(i)  )   );
+	    }
 
 	}
+	if (i ==data.size()-1){
+	    System.out.println("MISC: " + metricsNames.get(i));
+	}
+	
 	// Create Chart
 	//Chart chart = QuickChart.getChart(filename, "Time (s)", metricsNames.get(i), 
         //metricsNames.get(i),
@@ -104,17 +161,26 @@ public class ResourceUtilizationPlotter {
 	// Show it
 	
     }
+    int scale = 4;
     chart.setChartTitle(title);
-    chart.setXAxisTitle("Time (s)");
-    chart.setYAxisTitle("usage");
+    chart.setXAxisTitle("Time (days)");
+    chart.setYAxisTitle("usage (%)");
     chart.getStyleManager().setChartType(ChartType.Line);    
     chart.getStyleManager().setLegendPosition(LegendPosition.OutsideE);
     chart.getStyleManager().setChartBackgroundColor(Color.WHITE);
-    chart.getStyleManager().setChartTitleFont(new Font(Font.DIALOG, Font.PLAIN, 24));
-    chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 18));
-    chart.getStyleManager().setAxisTitleFont(new Font(Font.DIALOG, Font.PLAIN, 30));
-    chart.getStyleManager().setAxisTickLabelsFont(new Font(Font.DIALOG, Font.PLAIN, 18));
     //chart.getStyleManager().setDecimalPattern("#.#E0");
+    
+
+    chart.getStyleManager().setChartTitleFont(new Font(Font.DIALOG, Font.PLAIN, 6*scale));
+    chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 7*scale));
+    chart.getStyleManager().setLegendSeriesLineLength(scale * 10);
+    chart.getStyleManager().setAxisTitleFont(new Font(Font.DIALOG, Font.PLAIN, 8*scale));
+    chart.getStyleManager().setAxisTickLabelsFont(new Font(Font.DIALOG, Font.PLAIN, 8*scale));
+    chart.getStyleManager().setAxisTickPadding(10);
+    chart.getStyleManager().setAxisTitlePadding(scale * 5);
+    chart.getStyleManager().setChartPadding(scale * 5);
+    chart.getStyleManager().setXAxisTickMarkSpacingHint(100);
+    chart.getStyleManager().setYAxisTickMarkSpacingHint(100);
     new SwingWrapper(chart).displayChart();	
 
  
