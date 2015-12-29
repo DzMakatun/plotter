@@ -16,15 +16,19 @@ import com.xeiam.xchart.StyleManager.LegendPosition;
  */
 public class CompareFromDifferentFiles {
   
-  public static void plot(String[] filenames, String[] seriesNames, String fieldName, String title, String xName, String yName, double mult) throws Exception {
-      System.out.println("CompareFromDifferentFiles: starting to process files " + filenames);
+  public static void plot(LinkedList<String> filenamesToUse, LinkedList<String> names, String fieldName, String title, String xName, String yName, double mult) throws Exception {
+      System.out.println("CompareFromDifferentFiles: starting to process files " + filenamesToUse);
       Chart chart = new ChartBuilder().width(1500).height(500).build();   
-  SeriesLineStyle[] stiles= {SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT};
+  SeriesLineStyle[] stiles= {SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
+	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
+	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT};
   //Color[] color= { Color.DARK_GRAY, Color.GRAY, Color.BLACK};
-  Color[] color= {Color.RED, Color.BLUE, Color.BLACK};
+  Color[] color= {Color.RED, Color.BLUE, Color.BLACK, Color.CYAN, Color.ORANGE, Color.MAGENTA, Color.GREEN, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
+
+  
   int stileNo = 0;
   int fileNomber = 0;
-  for (String filename : filenames){
+  for (String filename : filenamesToUse){
     System.out.println("CompareFromDifferentFiles: reading file " + filename);
     BufferedReader br = new BufferedReader(new FileReader(filename));
     LinkedList<String> metricsNames = new LinkedList<String>();
@@ -48,15 +52,18 @@ public class CompareFromDifferentFiles {
     
     //calculate lines
     int lines = 0;
-    br.mark(10000000);
+    br.mark(50000000);
 
     
     while ((line = br.readLine()) != null ) {	
 	lines++;
     }
     System.out.println("lines: " + lines);
-    br.reset();
     
+    //br.reset();
+    br.close();
+    br = new BufferedReader(new FileReader(filename));
+    br.readLine();
     
     //read all data into 2D array
     LinkedList <double[]> data = new LinkedList<double[]>();
@@ -101,12 +108,12 @@ public class CompareFromDifferentFiles {
 
 
     System.out.println("plotting...");
-    for (int i = 1; i < data.size(); i+=2 ){
-	if (metricsNames.get(i).compareTo(fieldName) != 0 || data.get(i)[0] == -1){
+    for (int i = 1; i < data.size(); i++ ){
+	if (metricsNames.get(i).compareTo(fieldName) != 0){
 	    continue;
 	}
 	//.setLineStyle(stiles[stileNo]).setLineColor(SeriesColor.BLACK)
-	Series serie = chart.addSeries(seriesNames[fileNomber], data.get(i-1), data.get(i));
+	Series serie = chart.addSeries(names.get(fileNomber), data.get(0), data.get(i));
 	serie.setMarker(SeriesMarker.NONE);
 	serie.setSeriesType(Series.SeriesType.Line);
 	serie.setLineColor(color[stileNo]);
