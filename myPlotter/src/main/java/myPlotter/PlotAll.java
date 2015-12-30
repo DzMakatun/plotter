@@ -7,13 +7,17 @@ import java.util.LinkedList;
 public class PlotAll {
 
     public static void main(String[] args) throws Exception {
-	    String prefix = "LARGE";
+	    String prefix = "AAA";
 	    String description = " ";//"1 node, 1 Gbps link, 1000 CPUs, 01 TB disk, 7000 jobs, 0.1 Gbps background (1 thread)";
 	    //String prefix1 = "F:/GridSimResults/3nodes/planer/";
 	    
-	    File PUSHseq = new File("F:/GridSimResults/LargeGrid/PUSHseq");
-	    File PLANNER = new File("F:/GridSimResults/LargeGrid/PLANNER_NEW");
-	    File PUSHpar = new File("F:/GridSimResults/LargeGrid/PUSHpar");	    
+	    File PLANNER = new File("F:/git/Grid_simulation/grid/src/main/java/flow_model/output/");
+	    File PUSHseq = new File("F:/git/Grid_simulation/grid/src/main/java/push_model/output/");
+	    File PUSHpar = new File("F:/git/Grid_simulation/grid/src/main/java/PUSH_parallel_transfer/output/");
+	    
+	    //File PUSHseq = new File("F:/GridSimResults/LargeGrid/PUSHseq");
+	    //File PLANNER = new File("F:/GridSimResults/LargeGrid/PLANNER_NEW");
+	    //File PUSHpar = new File("F:/GridSimResults/LargeGrid/PUSHpar");	    
 	    
 	    File[] folders = {PUSHseq, PLANNER, PUSHpar};
 	    
@@ -36,7 +40,7 @@ public class PlotAll {
 		System.out.println(file.getAbsolutePath());
 		if (file.isFile() && file.getName().startsWith(prefix) && file.length() > 0){
 		        //stat file
-			if (file.getName().endsWith("_stat.csv") && file.getName().contains("PLUTO")){
+			if (file.getName().endsWith("_stat.csv") && file.getName().contains("KISTI")){
 			    ResourceUtilizationPlotter.plot(file.getAbsolutePath(), 
 				    file.getName().split("_")[1] + " (" + file.getName().split("-")[1] +")");
 			}				
@@ -47,11 +51,12 @@ public class PlotAll {
 			//planned net usage
 			if (file.getName().endsWith("_planned_net_usage.csv")){
 			    plotter.plot(file.getAbsolutePath(), "planned data flows" + " (" + file.getName().split("-")[1] +")", "time (days)", "usage");
-			}
-			
+			}		
 		}
 
 	    }
+	    
+	    
 	    
 	    //ALL CPUs AT ONE plot	
 	    System.out.println("-----------------ALL CPUs AT ONE plot---------------");
@@ -130,8 +135,51 @@ public class PlotAll {
 	     //   "TOTAL", description, "Time (days)", "CPU usage (%)", 100);
 	    
 	    //compare network load
+	    field = "queue";
 	    String queueLengthStatFilename = "RCF_router_to_KISTI_router_statistics.csv";
 	    String flowsNoFilename = "RCF_KISTI_link_statistics.csv";
+	    String[] temp = null;
+	    filenamesToUse.clear();
+	    names.clear();
+	    for (File file: PLANNERFiles){
+		if (file.isFile() && file.length() > 0){
+		    if (file.getName().endsWith("_router_statistics.csv") ){
+			temp = file.getName().split("_");
+			//plotter.plot(file.getAbsolutePath(), "transfer queue " + temp[0] + "->" + temp [3] + " (PLANNER) " , "time (days)", "files");			
+			filenamesToUse.add(file.getAbsolutePath());
+			names.add(temp[0] + "->" + temp [3] + " (PLANNER) " );			
+		    }		    
+		}
+	    }	
+	    
+	    for (File file: PUSHseqFiles){
+		if (file.isFile() && file.length() > 0){
+		    if (file.getName().endsWith("_router_statistics.csv") ){
+			temp = file.getName().split("_");
+			//plotter.plot(file.getAbsolutePath(), "transfer queue " + temp[0] + "->" + temp [3] + " (PUSHseq) " , "time (days)", "files");			
+			filenamesToUse.add(file.getAbsolutePath());
+			names.add(temp[0] + "->" + temp [3] + " (PUSHseq) " );			
+		    }		    
+		}
+	    }	
+	    
+	    for (File file: PUSHparFiles){
+		if (file.isFile() && file.length() > 0){
+		    if (file.getName().endsWith("_link_statistics.csv") && ! file.getName().contains("_link_link_") ){
+			temp = file.getName().split("_");
+			//plotter.plot(file.getAbsolutePath(), "transfer queue " + temp[0] + "->" + temp [1] + " (PUSHpar) " , "time (days)", "files");			
+			filenamesToUse.add(file.getAbsolutePath());
+			names.add(temp[0] + "<->" + temp [1] + " (PUSHpar) " );			
+		    }		    
+		}
+	    }	
+	    if ( !filenamesToUse.isEmpty() ){
+		CompareFromDifferentFiles.plot(filenamesToUse, names,
+			field, "Transfer queue", "Time (days)", "files", 1);
+	    }else{
+		System.out.println("FAILED TO FIND FILES");
+	    }
+
 	    //String[] StatFilenames = {prefixPUSHpar + flowsNoFilename, prefixPUSHseq + queueLengthStatFilename, prefix1 + queueLengthStatFilename};//
 	    //seriesNames = { "PUSH_par", "PUSH_seq", "PLANNER" };//
 	    //CompareFromDifferentFiles.plot(StatFilenames, seriesNames,
