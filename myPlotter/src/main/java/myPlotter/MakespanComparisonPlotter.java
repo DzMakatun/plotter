@@ -25,13 +25,15 @@ public class MakespanComparisonPlotter {
     LinkedList<Double> freeCPUs = new LinkedList<Double>();
     
     SeriesLineStyle[] stiles= {SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
-	    SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH};
+	    SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, };
     int stileNo = 0;
 
-    SeriesMarker[] seriesMarkers =  {SeriesMarker.CIRCLE, SeriesMarker.DIAMOND, SeriesMarker.SQUARE, SeriesMarker.TRIANGLE_DOWN,
-	    SeriesMarker.CIRCLE, SeriesMarker.DIAMOND};
+    SeriesMarker[] seriesMarkers =  {SeriesMarker.CIRCLE, SeriesMarker.TRIANGLE_DOWN,  SeriesMarker.SQUARE, SeriesMarker.DIAMOND,
+	    SeriesMarker.TRIANGLE_DOWN,  SeriesMarker.SQUARE, SeriesMarker.TRIANGLE_DOWN,  SeriesMarker.SQUARE};
+    Color[] color= {Color.BLACK, Color.RED, Color.BLUE, Color.CYAN, Color.RED, Color.BLUE, Color.RED, Color.BLUE, Color.ORANGE, Color.MAGENTA, Color.GREEN, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
     ArrayList<String> seriesNames = new ArrayList<String>();
     seriesNames.add("PLANER"); seriesNames.add("PUSH_par");seriesNames.add("PUSH_seq");seriesNames.add("no_network");
+    seriesNames.add("PLANNER_vs_PUSH_par");seriesNames.add("PLANNER_vs_PUSH_seq");
     seriesNames.add("PLANER_vs_PUSH_par");seriesNames.add("PLANER_vs_PUSH_seq");
     String line;
     String[] lineData;
@@ -93,17 +95,19 @@ public class MakespanComparisonPlotter {
 	    continue;
 	}
 	//.setLineStyle(stiles[stileNo]).setLineColor(SeriesColor.BLACK)
-	Series series = chart.addSeries(metricsNames.get(i).replaceAll("PLANER", "PLANNER").replaceAll("_vs_", " vs "), data.get(0), data.get(i));
+	Series series = chart.addSeries(metricsNames.get(i).replaceAll("PLANER", "PLANNER").replaceAll("_vs_", " vs ").replaceAll("PUSH_par", "PAR").replaceAll("PUSH_seq", "SEQ"), data.get(0), data.get(i));
 	series
 	    //.setLineStyle(stiles[stileNo])
-	    .setLineColor(SeriesColor.BLACK)
-	    .setMarkerColor(SeriesColor.BLACK)
+	    //.setLineColor(SeriesColor.BLACK)
+	    //.setMarkerColor(SeriesColor.BLACK)
 	    
 	    .setSeriesType(Series.SeriesType.Line);
 	int index = seriesNames.indexOf( metricsNames.get(i) );
 	if (index != -1 ){
 	    series.setMarker(seriesMarkers[index]);
 	    series.setLineStyle(stiles[index]);
+	    series.setLineColor(color[index]);
+	    series.setMarkerColor(color[index]);
 	}
 	
 	
@@ -121,7 +125,7 @@ public class MakespanComparisonPlotter {
     chart.setXAxisTitle(xName);
     chart.setYAxisTitle(yName);
     chart.getStyleManager().setChartType(ChartType.Line);    
-    chart.getStyleManager().setLegendPosition(LegendPosition.InsideNW);
+    chart.getStyleManager().setLegendPosition(LegendPosition.InsideNE);
     chart.getStyleManager().setChartBackgroundColor(Color.WHITE);
     chart.getStyleManager().setChartTitleFont(new Font(Font.DIALOG, Font.PLAIN, 6*scale));
     chart.getStyleManager().setLegendFont(new Font(Font.DIALOG, Font.PLAIN, 7*scale));

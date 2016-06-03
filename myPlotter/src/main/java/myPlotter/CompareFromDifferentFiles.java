@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.xeiam.xchart.*;
@@ -23,7 +24,13 @@ public class CompareFromDifferentFiles {
 	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
 	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT};
   //Color[] color= { Color.DARK_GRAY, Color.GRAY, Color.BLACK};
-  Color[] color= {Color.RED, Color.BLUE, Color.BLACK, Color.CYAN, Color.ORANGE, Color.MAGENTA, Color.GREEN, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
+  Color[] color= {Color.RED, Color.BLUE, Color.BLACK, Color.CYAN, Color.MAGENTA, Color.ORANGE, Color.GREEN, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
+  ArrayList<String> seriesNames = new ArrayList<String>();
+  seriesNames.add("PUSHpar");
+  seriesNames.add("PUSHseq");
+  seriesNames.add("PLANNER"); 
+  seriesNames.add("no_network");
+  seriesNames.add("PULL");
 
   
   int stileNo = 0;
@@ -113,10 +120,17 @@ public class CompareFromDifferentFiles {
 	    continue;
 	}
 	//.setLineStyle(stiles[stileNo]).setLineColor(SeriesColor.BLACK)
-	Series serie = chart.addSeries(names.get(fileNomber), data.get(0), data.get(i));
+	Series serie = chart.addSeries(names.get(fileNomber).replaceAll("PUSHpar", "PAR").replaceAll("PUSHseq", "SEQ"), data.get(0), data.get(i));
 	serie.setMarker(SeriesMarker.NONE);
 	serie.setSeriesType(Series.SeriesType.Line);
 	serie.setLineColor(color[stileNo]);
+	
+	int index = seriesNames.indexOf( names.get(fileNomber) );
+	if (index != -1 ){
+	    //serie.setLineStyle(stiles[index]);
+	    serie.setLineColor(color[index]);
+	}
+	
 
 	//series.setLineColor(SeriesColor.BLUE);
 	// Create Chart

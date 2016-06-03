@@ -15,30 +15,30 @@ public class plotSomething {
 	    	    " ", "Bandwidth (Gbps)", "makespan improvement (%)");*/
 	   // MakespanComparisonPlotter.plot(prefix + "3nodes/3nodes_makespans.csv",
 	   // 	    " ", "Bandwidth (Gbps)", "Makespan (s)");
-	    //MakespanComparisonPlotter.plot(prefix + "3nodes/3nodes_relative_makespan.csv",
-	    //	    " ", "Bandwidth (Gbps)", "Makespan");
-	    //MakespanComparisonPlotter.plot(prefix + "3nodes/3nodes_makespans_improvement.csv",
-	    	//    " ", "Bandwidth (Gbps)", "Makespan improvement (%)");
+	    MakespanComparisonPlotter.plot(prefix + "3nodes/3nodes_relative_makespan.csv",
+	    	    " ", "Bandwidth (Gbps)", "Makespan");
+	    MakespanComparisonPlotter.plot(prefix + "3nodes/3nodes_makespans_improvement.csv",
+	    	    "", "Bandwidth (Gbps)", "Makespan improvement (%)");
 	    
 	    //MakespanComparisonPlotter.plot(prefix + "cpu/cpu_scalability_makespan.csv",
 	    //	    " ", "Number of CPUs", "Makespan (s)");
 	    //MakespanComparisonPlotter.plot(prefix + "cpu/cpu_scalability_makespan_relative.csv",
 	    //	    " ", "Number of CPUs", "Makespan");
-	    //MakespanComparisonPlotter.plot(prefix + "cpu/cpu_scalability_makespan_relative_constant.csv",
-	    	//    " ", "Number of CPUs", "Makespan");
-	    //MakespanComparisonPlotter.plot(prefix + "cpu/cpu_scalability_makespan_improvement.csv",
-	    	//    " ", "Number of CPUs", "Makespan improvement (%)");
-	    //MakespanComparisonPlotter.plot(prefix + "1node/1node_relative_makespan_vs_bandwidth.csv",
-	    //	    " ", "Bandwidth (Gbps)", "Makespan");
+	    MakespanComparisonPlotter.plot(prefix + "cpu/cpu_scalability_makespan_relative_constant.csv",
+	    	    " ", "Number of CPUs", "Makespan");
+	    MakespanComparisonPlotter.plot(prefix + "cpu/cpu_scalability_makespan_improvement.csv",
+	    	    "", "Number of CPUs", "Makespan improvement (%)");
+	    MakespanComparisonPlotter.plot(prefix + "1node/1node_relative_makespan_vs_bandwidth.csv",
+	    	    " ", "Bandwidth (Gbps)", "Makespan");
 	    //MakespanComparisonPlotter.plot(prefix + "1node/1node_makespan_vs_bandwidth.csv",
 	    //	    " ", "Bandwidth (Gbps)", "Makespan (s)");
-	    //MakespanComparisonPlotter.plot(prefix + "1node/1node_makespan_improvement_vs_bandwidth.csv",
-	    //	    " ", "Bandwidth (Gbps)", "Makespan improvement (%)");
+	    MakespanComparisonPlotter.plot(prefix + "1node/1node_makespan_improvement_vs_bandwidth.csv",
+	    	    "", "Bandwidth (Gbps)", "Makespan improvement (%)");
 	    	    
 	    MakespanComparisonPlotter.plot(prefix + "BackGroungTraffic/background_multiple_files_relative_makespan.csv",
-	    	    "1 node, 1 Gbps link, 1000 CPUs, 24 TB disk, 7000 jobs, (increasing number of junk files)", "Background traffic (% of bandwidth)", "Makespan");
+	    	    "1 remote node, 1 Gbps link, 1000 CPUs, 14 TB disk, 7000 jobs", "Concurrent submission rate (Gbps)", "Makespan");
 	    MakespanComparisonPlotter.plot(prefix + "BackGroungTraffic/background_multiple_files_makespan_improvement.csv",
-	    	    "1 node, 1 Gbps link, 1000 CPUs, 24 TB disk, 7000 jobs, (increasing number of junk files)", "Background traffic (% of bandwidth)", "Makespan improvement (%)");
+	    	    "", "Concurrent submission rate (Gbps)", "Makespan improvement (%)");
 	    
     }
 

@@ -108,7 +108,7 @@ public class ResourceUtilizationPlotter {
     }
     
     //renormalize plots
-    for (int i = 6; i < data.size(); i++){
+    for (int i = 7; i < data.size(); i++){
 	for (int j = 0; j < lines; j++){
 	    data.get(i)[j] += data.get(i - 1)[j];
 	}
