@@ -19,18 +19,20 @@ public class CompareFromDifferentFiles {
   
   public static void plot(LinkedList<String> filenamesToUse, LinkedList<String> names, String fieldName, String title, String xName, String yName, double mult) throws Exception {
       System.out.println("CompareFromDifferentFiles: starting to process files " + filenamesToUse);
-      Chart chart = new ChartBuilder().width(1500).height(500).build();   
+      Chart chart = new ChartBuilder().width(1100).height(500).build();   
   SeriesLineStyle[] stiles= {SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
 	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
 	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT};
   //Color[] color= { Color.DARK_GRAY, Color.GRAY, Color.BLACK};
-  Color[] color= {Color.RED, Color.BLUE, Color.BLACK, Color.CYAN, Color.MAGENTA, Color.ORANGE, Color.GREEN, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
+  Color[] color= {Color.RED, Color.BLUE, Color.BLACK, Color.CYAN, Color.RED, Color.GRAY, Color.ORANGE, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
   ArrayList<String> seriesNames = new ArrayList<String>();
   seriesNames.add("PUSHpar");
   seriesNames.add("PUSHseq");
   seriesNames.add("PLANNER"); 
   seriesNames.add("no_network");
   seriesNames.add("PULL");
+  seriesNames.add("PLANNER(single)"); 
+  seriesNames.add("PULL(single)");
 
   
   int stileNo = 0;

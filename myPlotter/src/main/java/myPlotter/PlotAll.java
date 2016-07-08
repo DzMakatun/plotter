@@ -8,7 +8,7 @@ public class PlotAll {
 
     public static void main(String[] args) throws Exception {
 	    //String prefix = "ZZ4";
-	    String prefix = "S2P2";
+	    String prefix = "T2D";
 	    String description = "multiple data sources (test) ";//"1 node, 1 Gbps link, 1000 CPUs, 01 TB disk, 7000 jobs, 0.1 Gbps background (1 thread)";
 	    //String prefix1 = "F:/GridSimResults/3nodes/planer/";
 	    
@@ -49,14 +49,14 @@ public class PlotAll {
 		if (file.isFile() && file.getName().startsWith(prefix) && file.length() > 0){
 		        //stat file
 			if (file.getName().endsWith("_stat.csv") 
-				//&& file.getName().contains("KISTI")
+				&& (file.getName().contains("_S0_") || file.getName().contains("_N1_") )
 				){
 			    ResourceUtilizationPlotter.plot(file.getAbsolutePath(), 
 				    file.getName().split("_")[1] + (" (" + file.getName().split("-")[1] +")").replaceAll("PUSHpar", "PAR").replaceAll("PUSHseq", "SEQ") );
 			}				
 			//network usage
 			if (file.getName().endsWith("network_usage.csv")){
-			    plotter.plot(file.getAbsolutePath(), "network usage " + (" (" + file.getName().split("-")[1] +")").replaceAll("PUSHpar", "PAR").replaceAll("PUSHseq", "SEQ"), "time (days)", "usage");
+			    //plotter.plot(file.getAbsolutePath(), "network usage " + (" (" + file.getName().split("-")[1] +")").replaceAll("PUSHpar", "PAR").replaceAll("PUSHseq", "SEQ"), "time (days)", "usage");
 			}			
 			//planned net usage
 			if (file.getName().endsWith("_planned_net_usage.csv")){
@@ -86,10 +86,10 @@ public class PlotAll {
 		    }
 		}
 		if ( !filenamesToUse.isEmpty() ){
-			CompareFromDifferentFiles.plot(filenamesToUse, names,
-				       "busyCPUs", folder.getParentFile().getName().replace("flow_model", "PLANNER").replace("push_model", "SEQ").replace("PUSH_parallel_transfer", "PAR").replace("pullModel", "PULL"), "Time (days)", "CPU usage", 100);
-			CompareFromDifferentFiles.plot(filenamesToUse, names,
-				       "jobQueue", folder.getParentFile().getName().replace("flow_model", "PLANNER").replace("push_model", "SEQ").replace("PUSH_parallel_transfer", "PAR").replace("pullModel", "PULL"), "Time (days)", "job queue (% of #CPU)", 100);
+			//CompareFromDifferentFiles.plot(filenamesToUse, names,
+			//	       "busyCPUs", folder.getParentFile().getName().replace("flow_model", "PLANNER").replace("push_model", "SEQ").replace("PUSH_parallel_transfer", "PAR").replace("pullModel", "PULL"), "Time (days)", "CPU usage", 100);
+			//CompareFromDifferentFiles.plot(filenamesToUse, names,
+			//	       "jobQueue", folder.getParentFile().getName().replace("flow_model", "PLANNER").replace("push_model", "SEQ").replace("PUSH_parallel_transfer", "PAR").replace("pullModel", "PULL"), "Time (days)", "job queue (% of #CPU)", 100);
 		}else{
 		    System.out.println("FAILED TO FIND FILES");
 		}  	    
@@ -209,8 +209,8 @@ public class PlotAll {
 	    }	
 	    
 	    if ( !filenamesToUse.isEmpty() ){
-		CompareFromDifferentFiles.plot(filenamesToUse, names,
-			field, "Transfer queue", "Time (days)", "files", 1);
+		//CompareFromDifferentFiles.plot(filenamesToUse, names,
+		//	field, "Transfer queue", "Time (days)", "files", 1);
 	    }else{
 		System.out.println("FAILED TO FIND FILES");
 	    }

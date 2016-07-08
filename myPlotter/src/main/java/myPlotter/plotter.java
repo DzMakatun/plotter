@@ -40,7 +40,7 @@ public class plotter {
     
     //calculate lines
     int lines = 0;
-    br.mark(10000000);
+    br.mark(20000000);
 
     
     while ((line = br.readLine()) != null ) {	
