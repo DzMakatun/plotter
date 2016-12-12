@@ -25,6 +25,7 @@ public class ResourceUtilizationPlotter {
      colorMap.put("waitingInputSize", Color.BLUE);
      colorMap.put("readyOutputSize", Color.ORANGE);     
      colorMap.put("pendingOutputSize", Color.RED);
+     colorMap.put("untouchedInputSize", Color.YELLOW);
      
      colorMap.put("jobSubmissionFailureFlag", Color.PINK);
      colorMap.put("incommingTransferFailureFlag", Color.MAGENTA);     
@@ -37,6 +38,7 @@ public class ResourceUtilizationPlotter {
      nameMap.put("waitingInputSize", "input queue");
      nameMap.put("readyOutputSize", "processed output");
      nameMap.put("pendingOutputSize", "pending");
+     nameMap.put("untouchedInputSize", "HPSS");
      
      nameMap.put("jobSubmissionFailureFlag", "job submition failure");
      nameMap.put("incommingTransferFailureFlag", "incoming transfer failure");
@@ -108,7 +110,7 @@ public class ResourceUtilizationPlotter {
     }
     
     //renormalize plots
-    for (int i = 7; i < data.size(); i++){
+    for (int i = 7; i < data.size() -1; i++){
 	for (int j = 0; j < lines; j++){
 	    data.get(i)[j] += data.get(i - 1)[j];
 	}
@@ -131,17 +133,14 @@ public class ResourceUtilizationPlotter {
 	Series serie = chart.addSeries(nameMap.get(metricsNames.get(i) ), data.get(0), data.get(i)).setMarker(SeriesMarker.NONE);
 	
 	
-	if (metricsNames.get(i).equals("busyCPUs")){	    //System.out.println("cache");
+	if (metricsNames.get(i).equals("busyCPUs") 
+		|| metricsNames.get(i).endsWith("Flag") 
+		|| metricsNames.get(i).equals("untouchedInputSize") ){	    //System.out.println("cache");
 	    serie   
 	    .setSeriesType(Series.SeriesType.Line);
 	    serie.setLineColor(colorMap.get(  metricsNames.get(i)  )   );
-	}else
-	if (metricsNames.get(i).endsWith("Flag")){
-	    serie.setSeriesType(Series.SeriesType.Line);
-	    serie.setLineStyle(SeriesLineStyle.DOT_DOT);
-	    serie.setLineColor(colorMap.get(  metricsNames.get(i)  )   );
-	}else
-	{    serie
+	}else{
+	    serie
 	    .setMarker(SeriesMarker.NONE)
 	    .setSeriesType(Series.SeriesType.Area);
 	    if (colorMap.containsKey(metricsNames.get(i)) ){

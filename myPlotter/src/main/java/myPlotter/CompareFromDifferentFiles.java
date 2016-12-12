@@ -24,7 +24,7 @@ public class CompareFromDifferentFiles {
 	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT,
 	  SeriesLineStyle.SOLID,  SeriesLineStyle.DASH_DASH, SeriesLineStyle.DASH_DOT, SeriesLineStyle.DOT_DOT};
   //Color[] color= { Color.DARK_GRAY, Color.GRAY, Color.BLACK};
-  Color[] color= {Color.RED, Color.BLUE, Color.BLACK, Color.CYAN, Color.RED, Color.GRAY, Color.ORANGE, Color.YELLOW,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
+  Color[] color= {Color.GREEN, Color.BLUE, Color.RED, Color.CYAN, Color.BLACK, Color.BLUE, Color.GRAY, Color.BLUE,  Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY, Color.GRAY};
   ArrayList<String> seriesNames = new ArrayList<String>();
   seriesNames.add("PUSHpar");
   seriesNames.add("PUSHseq");
@@ -33,11 +33,16 @@ public class CompareFromDifferentFiles {
   seriesNames.add("PULL");
   seriesNames.add("PLANNER(single)"); 
   seriesNames.add("PULL(single)");
+  seriesNames.add("PLANNER(replication)"); 
+  seriesNames.add("PULL(replication)");
+  
+  ArrayList<Double> averages = new ArrayList<Double>();
 
   
   int stileNo = 0;
   int fileNomber = 0;
   for (String filename : filenamesToUse){
+    double average = 0.0;
     System.out.println("CompareFromDifferentFiles: reading file " + filename);
     BufferedReader br = new BufferedReader(new FileReader(filename));
     LinkedList<String> metricsNames = new LinkedList<String>();
@@ -101,6 +106,11 @@ public class CompareFromDifferentFiles {
 	    {  
 		data.get(i)[lineIterator] = data.get(i)[lineIterator - 1];  //if the data is corripted - repeat the last point
 	    }
+	    //update average
+	    if (metricsNames.get(i).equals(fieldName)){
+		average += data.get(i)[lineIterator]; //calculates sum of all values
+	    }
+	    
 	    
 	}
 	lineIterator++;
@@ -109,12 +119,16 @@ public class CompareFromDifferentFiles {
     while (lineIterator < lines){
 	for(int i = 0; i < metricsNames.size(); i++){
 	    data.get(i)[lineIterator] = data.get(i)[lineIterator - 1];
+	    //update average
+	    if (metricsNames.get(i).equals(fieldName)){
+		average += data.get(i)[lineIterator]; //calculates sum of all values
+	    }
 	}
 	lineIterator++;
     }
     
   
-
+   
 
     System.out.println("plotting...");
     for (int i = 1; i < data.size(); i++ ){
@@ -145,8 +159,10 @@ public class CompareFromDifferentFiles {
 	if (stileNo == color.length){stileNo = 0;}
     }
     fileNomber++;
+    average = average / lines;
+    averages.add(average);
   }
-    int scale = 4;
+    int scale = 6;
     chart.setChartTitle(title);
     chart.setXAxisTitle(xName);
     chart.setYAxisTitle(yName);
@@ -165,5 +181,13 @@ public class CompareFromDifferentFiles {
     chart.getStyleManager().setYAxisTickMarkSpacingHint(100);
     new SwingWrapper(chart).displayChart();	
     
+    System.out.println("AVERAGES OF " + fieldName);
+    int k = 0;
+    for (double average: averages){
+	System.out.println(average + " " + names.get(k));
+	k++;
+    }
   }
+  
+  
 }
